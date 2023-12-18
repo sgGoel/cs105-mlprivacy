@@ -36,8 +36,5 @@ class TestNoiseDetermination(unittest.TestCase):
         avg = np.mean(Sigma_B[i][i] for i in range(len(Sigma_B)))
         self.assertTrue(avg < self.baseline)
     
-    def test_code_correctness_complex(self):
-        pass
-
 if __name__ == '__main__':
     unittest.main()
