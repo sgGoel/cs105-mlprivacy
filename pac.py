@@ -5,9 +5,9 @@ np.random.seed(123)
 
 """Algorithm 1: (1-gamma)-Confidence noice Determination of Deterministic Mechanism M """
 
-def noise_determination(M, distrib, m, c, v, beta, r):
+def noise_determination(M, distrib, m, c, v, beta, r, d):
     #Lines 2-5: sample m points from the given distribution
-    y_labels = np.zeros(m)
+    y_labels = np.zeros((m, d))
     for k in range(m):
         X_k = distrib()
         y_labels[k] = M(X_k)
@@ -15,14 +15,14 @@ def noise_determination(M, distrib, m, c, v, beta, r):
     #Line 6: compute empirical mean and covariance over the sample
     mu_hat = np.mean(y_labels)
     Sigma_hat = np.cov(y_labels, rowvar=False)
+    #print("Debug: Sigma_hat", Sigma_hat)
 
     #Line 7: perform signular value decomposition
     U_hat, Lambda_hat, _ = np.linalg.svd(Sigma_hat)
-    d = len(Lambda_hat)
 
     #line 8: Calculate maximal index (ie index of the largest eigenvalue that satisfies the constraint)
     j0 = np.argmax(Lambda_hat > c) #am concerned about this line of code; came from chatgpt
-    print("Debug: j0", j0)
+    #print("Debug: j0", j0)
 
     #Lines 9-16: Compute Gaussian noise covariance, in two cases. ngl do not understand the math here.
     if np.min([np.abs(Lambda_hat[i] - Lambda_hat[j]) for i in range(j0+1) for j in range(d)]) > r * np.sqrt(d*c) + 2*c:
@@ -41,8 +41,8 @@ def noise_determination(M, distrib, m, c, v, beta, r):
 
 #Define Mechanism M (X --> Y)
 def M(X):
-    #for ease of testing, let M = I
-    return X
+    #for ease of testing, let M = polynomial basis
+    return [1, X, X**2]
 
 #Define distribution D of rv X
 def distrib():
@@ -62,8 +62,10 @@ beta = 0.1  #Mutual information quantity. B can be arbitrarily small, given larg
 
 r = 1 #Upper bound constraint on the output of mechanism M. Let's set r to the actual upper bound of M(D), ie 1.
 
+d = 3 #dimension of output of M
+
 #(1-gamma)-Confidence noice Determination of Deterministic Mechanism M 
-cov_mat = noise_determination(M, distrib, m, c, v, beta)
+cov_mat = noise_determination(M, distrib, m, c, v, beta, r, d)
 print(cov_mat)
 
 
