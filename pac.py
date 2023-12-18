@@ -1,8 +1,9 @@
 #DISCLAIMER: ChatGPT was used in this project. The two use cases were: 1) How do I compute X value in Python? or 2) How do I perform X operation in numpy?
 
 import numpy as np
-
 np.random.seed(123)
+
+"""Algorithm 1: (1-gamma)-Confidence noice Determination of Deterministic Mechanism M """
 
 def noise_determination(M, distrib, m, c, v, beta, r):
     #Lines 2-5: sample m points from the given distribution
@@ -19,7 +20,7 @@ def noise_determination(M, distrib, m, c, v, beta, r):
     U_hat, Lambda_hat, _ = np.linalg.svd(Sigma_hat)
     d = len(Lambda_hat)
 
-    #line 8: Calculate maximal index (ie index of largest eigenvalue)
+    #line 8: Calculate maximal index (ie index of the largest eigenvalue that satisfies the constraint)
     j0 = np.argmax(Lambda_hat > c) #am concerned about this line of code; came from chatgpt
     print("Debug: j0", j0)
 
@@ -36,6 +37,8 @@ def noise_determination(M, distrib, m, c, v, beta, r):
 
     return Sigma_B
 
+"""Define Mechanism M and Distribution D"""
+
 #Define Mechanism M (X --> Y)
 def M(X):
     #for ease of testing, let M = I
@@ -45,13 +48,19 @@ def M(X):
 def distrib():
     #for ease of testing, let D be uniform
     return np.random.uniform(0,1)
-    
 
-m = 100  #Sampling complexity (number of data points sampled)
-c = 0.1  #Security parameter
-v = 0.5  #Mutual information quantity
-beta = 0.01  #Mutual information quantity
-r = 0.1 #some parameter
+
+"""Parameters & Execution"""    
+
+m = 1000  #The sampling complexity (ie the number of data points sampled). Chosen arbitrarily.
+
+c = 0.1  #Security parameter. Higher c --> a higher standard of security. Too high a value of c --> lots and lots of added noise.
+
+v = 0.1  #Mutual information quantity. v + B = desired mutual information upper bound.
+
+beta = 0.1  #Mutual information quantity. B can be arbitrarily small, given large m.
+
+r = 1 #Upper bound constraint on the output of mechanism M. Let's set r to the actual upper bound of M(D), ie 1.
 
 #(1-gamma)-Confidence noice Determination of Deterministic Mechanism M 
 cov_mat = noise_determination(M, distrib, m, c, v, beta)
