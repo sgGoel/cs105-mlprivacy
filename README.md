@@ -2,6 +2,10 @@
 
 ## Code Description
 
+In the implementation, I followed Algorithm 1, a protocol for determining Gaussian noise to achieve a specified upper bound on mutual information (MI) with high confidence for a given deterministic mechanism M. The algorithm involves generating data samples, recording the outputs of the deterministic mechanism M, and estimating the covariance matrix of the outputs. Singular Value Decomposition (SVD) is then applied to obtain the eigenvalues and eigenvectors. The algorithm determines the noise covariance matrix based on the eigenvalue gap, ensuring control over MI(X; M(X) + B) with a specified bound. The implementation takes into account cases where the eigenvalues of the covariance matrix are distinct or when a more pessimistic perturbation is required, adjusting the noise parameters accordingly. The goal is to provide a rigorous approach to privacy-preserving mechanisms by introducing Gaussian noise, enabling control over information leakage in a provable manner.
+
+In summary, the implemented Algorithm 1 successfully estimates the necessary Gaussian noise covariance to achieve a desired upper bound on mutual information for a given deterministic mechanism. The approach considers the eigenvalue structure of the covariance matrix, allowing for different noise perturbations based on the eigenvalue gap. The resulting implementation provides a systematic and confidence-driven approach to ensuring privacy in scenarios where deterministic mechanisms are employed, contributing to a comprehensive understanding of information leakage control in practical applications.
+
 ## Project Description
 
 **Technical Component** 
